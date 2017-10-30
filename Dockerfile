@@ -1,11 +1,11 @@
 FROM daocloud.io/library/php:7.1.9-fpm
 
-# 切换 apt 镜像源
-RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
-    echo "deb http://mirrors.163.com/debian/ jessie main non-free contrib" >/etc/apt/sources.list && \
-    echo "deb http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list && \
-    echo "deb-src http://mirrors.163.com/debian/ jessie main non-free contrib" >>/etc/apt/sources.list && \
-    echo "deb-src http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list
+# 切换 apt 镜像源(本地测试打开,daocloud 线上关闭)
+#RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+#    echo "deb http://mirrors.163.com/debian/ jessie main non-free contrib" >/etc/apt/sources.list && \
+#    echo "deb http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list && \
+#    echo "deb-src http://mirrors.163.com/debian/ jessie main non-free contrib" >>/etc/apt/sources.list && \
+#    echo "deb-src http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list
 
 # 安装依赖
 RUN apt-get update && apt-get install -y \
@@ -60,7 +60,7 @@ COPY ./supervisor/*.conf /etc/supervisor/conf.d/
 #COPY ./nginx/vhost.conf /etc/nginx/conf.d/vhost.conf
 RUN rm -Rf /etc/nginx/sites-enabled/default
 
-WORKDIR /var/www/html
+WORKDIR /app
 
 EXPOSE 80
 
