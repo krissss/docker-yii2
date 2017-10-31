@@ -23,11 +23,8 @@ COPY . /app
 RUN composer install \
     && composer dump-autoload
     
-# 修改目录权限
-RUN chown -R www-data:www-data /app \
-    &&chmod -R 0777 ./runtime \
-    && chmod -R 0777 ./web/assets \
-    && chmod -R 0755 ./yii
+# 执行yii的初始脚本
+RUN php init --env=Production --overwrite=n
 
 # 定义环境变量
 ENV MYSQL_PORT_3306_TCP_ADDR 192.168.18.249
@@ -36,4 +33,4 @@ ENV MYSQL_USERNAME test
 ENV MYSQL_PASSWORD 123456
 
 # 如果确定数据库已经存在，则可以执行 migrate
-RUN php yii migrate --interactive=0
+#RUN php yii migrate --interactive=0
