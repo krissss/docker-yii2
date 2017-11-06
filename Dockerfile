@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
         libpng12-dev \
+        git \
         supervisor \
         nginx \
     && docker-php-ext-install \
