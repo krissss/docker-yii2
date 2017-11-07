@@ -5,9 +5,11 @@
 # Fail on any error
 set -o errexit
 
-# Set permissions based on ENV variable (debian only)
-if [ -x "usermod" ] ; then
-    usermod -u ${PHP_USER_ID} www-data
+if [ ${YII_MIGRATION_DO} == 1 ]; then
+    if [ ! -d "/yii2-migrat-flag" ]; then
+        php yii migrate --interactive=0
+        mkdir /yii2-migrat-flag
+    fi
 fi
 
 # Execute CMD

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 获取环境变量
  * @param $key
@@ -14,8 +13,8 @@ function env($key, $default = null)
     }
     return $value;
 }
-$dsn = env('DB_DSN', 'mysql:host=192.168.18.250;dbname=fenghui');
-$username = env('DB_USERNAME', 'outuser');
+$dsn = env('DB_DSN', 'mysql:host=127.0.0.1;dbname=yii2basic');
+$username = env('DB_USERNAME', 'test');
 $password = env('DB_PASSWORD', '123456');
 
 return [

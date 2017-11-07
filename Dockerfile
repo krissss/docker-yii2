@@ -1,11 +1,11 @@
 FROM daocloud.io/library/php:7.1.9-fpm
 
 # 切换 apt 镜像源(本地测试打开,daocloud 线上关闭)
-RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
-    echo "deb http://mirrors.163.com/debian/ jessie main non-free contrib" >/etc/apt/sources.list && \
-    echo "deb http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list && \
-    echo "deb-src http://mirrors.163.com/debian/ jessie main non-free contrib" >>/etc/apt/sources.list && \
-    echo "deb-src http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list
+#RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+#    echo "deb http://mirrors.163.com/debian/ jessie main non-free contrib" >/etc/apt/sources.list && \
+#    echo "deb http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list && \
+#    echo "deb-src http://mirrors.163.com/debian/ jessie main non-free contrib" >>/etc/apt/sources.list && \
+#    echo "deb-src http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list
 
 # 安装依赖
 RUN apt-get update && apt-get install -y \
@@ -36,8 +36,7 @@ RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
   && echo 'Asia/Shanghai' >/etc/timezone
 
 # 环境定义
-ENV PHP_USER_ID=33 \
-    PATH=/app:/app/vendor/bin:/root/.composer/vendor/bin:$PATH \
+ENV YII_MIGRATION_DO=0 \
     COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_HOME=/composer-dir \
     COMPOSER_VERSION=1.5.2
@@ -70,4 +69,4 @@ WORKDIR /app
 EXPOSE 80
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["docker-run.sh"]
+CMD ["/usr/local/bin/docker-run.sh"]

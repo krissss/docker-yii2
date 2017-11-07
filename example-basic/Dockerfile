@@ -24,15 +24,12 @@ RUN composer install \
     && composer dump-autoload
     
 # 修改目录权限
-RUN chown -R www-data:www-data /app \
-    &&chmod -R 0777 ./runtime \
-    && chmod -R 0777 ./web/assets \
-    && chmod -R 0755 ./yii
+RUN mkdir -p runtime web/assets \
+    && chmod -R 0777 runtime web/assets \
+    && chown -R www-data:www-data /app
 
 # 定义环境变量
-ENV DB_DSN='mysql:host=172.17.0.1;dbname=yii2basic' \
+ENV YII_MIGRATION_DO=1 \
+    DB_DSN='mysql:host=172.17.0.1;dbname=yii2basic' \
     DB_USERNAME=test \
     DB_PASSWORD=123456
-
-# 如果确定数据库已经存在，则可以执行 migrate
-#RUN php yii migrate --interactive=0

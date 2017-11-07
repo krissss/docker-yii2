@@ -27,10 +27,7 @@ RUN composer install \
 RUN php init --env=Production --overwrite=n
 
 # 定义环境变量
-ENV MYSQL_PORT_3306_TCP_ADDR 192.168.18.249
-ENV MYSQL_INSTANCE_NAME dockertest
-ENV MYSQL_USERNAME test
-ENV MYSQL_PASSWORD 123456
-
-# 如果确定数据库已经存在，则可以执行 migrate
-#RUN php yii migrate --interactive=0
+ENV YII_MIGRATION_DO=1 \
+    DB_DSN='mysql:host=172.17.0.1;dbname=yii2advanced' \
+    DB_USERNAME=test \
+    DB_PASSWORD=123456
