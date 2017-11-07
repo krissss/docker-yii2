@@ -26,7 +26,7 @@ return [
             'password' => $password,
             'charset' => 'utf8',
             'enableSchemaCache' => true,
-            'schemaCacheDuration' => YII_DEBUG ? 60 : 3600
+            'schemaCacheDuration' => 3600
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
