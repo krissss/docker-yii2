@@ -30,10 +30,9 @@ RUN chown -R www-data:www-data /app \
     && chmod -R 0755 ./yii
 
 # 定义环境变量
-ENV MYSQL_PORT_3306_TCP_ADDR 192.168.18.249
-ENV MYSQL_INSTANCE_NAME dockertest
-ENV MYSQL_USERNAME test
-ENV MYSQL_PASSWORD 123456
+ENV DB_DSN='mysql:host=172.17.0.1;dbname=yii2basic' \
+    DB_USERNAME=test \
+    DB_PASSWORD=123456
 
 # 如果确定数据库已经存在，则可以执行 migrate
-RUN php yii migrate --interactive=0
+#RUN php yii migrate --interactive=0
