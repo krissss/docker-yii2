@@ -1,4 +1,4 @@
-FROM daocloud.io/library/php:7.1.9-fpm
+FROM daocloud.io/library/php:7.0.12-fpm
 
 # 切换 apt 镜像源(本地测试打开,daocloud 线上关闭)
 #RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
