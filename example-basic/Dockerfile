@@ -29,7 +29,8 @@ RUN mkdir -p runtime web/assets \
     && chown -R www-data:www-data /app
 
 # 定义环境变量
-ENV YII_MIGRATION_DO=1 \
+ENV YII_DEBUG=0 \
+    YII_MIGRATION_DO=1 \
     DB_DSN='mysql:host=172.17.0.1;dbname=yii2basic' \
     DB_USERNAME=test \
     DB_PASSWORD=123456
