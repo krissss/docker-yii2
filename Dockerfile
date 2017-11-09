@@ -2,8 +2,8 @@ FROM daocloud.io/library/php:7.0.12-fpm
 
 # gosu 安装使用 github-production-release-asset-2e65be.s3.amazonaws.com 地址，国内被墙，所以使用 https 代理
 # 本地编译开启，线上编译一定注释掉
-ENV http_proxy http://192.168.18.250:8118
-ENV https_proxy http://192.168.18.250:8118
+#ENV http_proxy http://192.168.18.250:8118
+#ENV https_proxy http://192.168.18.250:8118
 
 # 切换 apt 镜像源(本地测试打开,daocloud 线上可以注释)
 #RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
@@ -71,8 +71,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # 取消代理，配合前面 gosu 安装需要代理的
-ENV http_proxy ''
-ENV https_proxy ''
+#ENV http_proxy ''
+#ENV https_proxy ''
 
 # 设置时区
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
