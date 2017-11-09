@@ -5,24 +5,6 @@ FROM daocloud.io/library/php:7.0.12-fpm
 #ENV http_proxy http://192.168.18.250:8118
 #ENV https_proxy http://192.168.18.250:8118
 
-# 安装composer，必须得在 gosu 之前
-ENV COMPOSER_ALLOW_SUPERUSER=1 \
-    COMPOSER_HOME=/tmp \
-    COMPOSER_VERSION=1.5.2
-# https://github.com/composer/docker/blob/master/1.5/Dockerfile
-RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/da290238de6d63faace0343efbdd5aa9354332c5/web/installer \
- && php -r " \
-    \$signature = '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410'; \
-    \$hash = hash('SHA384', file_get_contents('/tmp/installer.php')); \
-    if (!hash_equals(\$signature, \$hash)) { \
-        unlink('/tmp/installer.php'); \
-        echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
-        exit(1); \
-    }" \
- && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
- && composer --ansi --version --no-interaction \
- && rm -rf /tmp/* /tmp/.htaccess
-
 # 切换 apt 镜像源(本地测试打开,daocloud 线上可以注释)
 #RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
 #    echo "deb http://mirrors.163.codockerm/debian/ jessie main non-free contrib" >/etc/apt/sources.list && \
@@ -60,9 +42,8 @@ RUN set -ex; \
 	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
 	\
 	chmod +x /usr/local/bin/gosu; \
-	gosu nobody true; \
-	\
-	apt-get purge -y --auto-remove $fetchDeps
+	gosu nobody true;
+	# 最后一行，清理 ca-certificates 删除，因为后续还需要使用
 
 # 安装依赖
 RUN apt-get update && apt-get install -y \
@@ -88,6 +69,24 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /usr/src/php* \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# 安装composer
+ENV COMPOSER_ALLOW_SUPERUSER=1 \
+    COMPOSER_HOME=/tmp \
+    COMPOSER_VERSION=1.5.2
+# https://github.com/composer/docker/blob/master/1.5/Dockerfile
+RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/da290238de6d63faace0343efbdd5aa9354332c5/web/installer \
+ && php -r " \
+    \$signature = '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410'; \
+    \$hash = hash('SHA384', file_get_contents('/tmp/installer.php')); \
+    if (!hash_equals(\$signature, \$hash)) { \
+        unlink('/tmp/installer.php'); \
+        echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
+        exit(1); \
+    }" \
+ && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
+ && composer --ansi --version --no-interaction \
+ && rm -rf /tmp/* /tmp/.htaccess
+
 # 取消代理，配合前面 gosu 安装需要代理的
 #ENV http_proxy ''
 #ENV https_proxy ''
@@ -111,8 +110,8 @@ WORKDIR /app
 
 # 额外的环境变量
 ENV YII_MIGRATION_DO=0 \
-    # 多个路径写法：(/app/web/assets /app/runtime)
-    VOLUME_PATH=()
+    # 多个路径写法：/app/web/assets\ /app/runtime
+    VOLUME_PATH=''
 
 EXPOSE 80
 
