@@ -28,6 +28,7 @@ RUN php init --env=Production --overwrite=n
 
 # 定义环境变量
 ENV YII_MIGRATION_DO=1 \
+    VOLUME_PATH=/backend/web/assets\ /backend/runtime\ /frontend/web/assets\ /frontend/runtime\ /console/runtime \
     DB_DSN='mysql:host=172.17.0.1;dbname=yii2advanced' \
     DB_USERNAME=test \
     DB_PASSWORD=123456

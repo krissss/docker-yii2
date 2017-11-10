@@ -115,5 +115,5 @@ ENV YII_MIGRATION_DO=0 \
 
 EXPOSE 80
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["/usr/local/bin/docker-run.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["docker-run.sh"]

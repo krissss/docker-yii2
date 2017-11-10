@@ -1,6 +1,7 @@
 # yii2 docker
 
 - git
+- gosu
 - php-fpm
 - nginx
 - composer
@@ -17,7 +18,14 @@ docker run -v /root/www/basic/:/app -p 80:80 yii2-docker
 
 ## useful ENV
 
-- YII_MIGRATION_DO [0|1]
+- YII_MIGRATION_DO：是否在启动容器时执行 php yii migrate，值可选：
+   - `0`：不执行，
+   - `1`：执行
+
+- VOLUME_PATH：外部挂载 volume 的路径，可以解决写权限问题，值：
+   - `''`：为空代表没有外部挂在
+   - `/app/web/assets`：单个路径
+   - `/app/runtime\ /app/web/assets`：多个路径
 
 ## 问题
 
