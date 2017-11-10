@@ -22,17 +22,6 @@ COPY . /app
 # 执行 Composer 自动加载和相关脚本
 RUN composer install \
     && composer dump-autoload
-    
-# 修改目录权限
-RUN set -ex \
-    && for path in \
-        ./runtime \
-        ./web/assets \
-    ; do \
-        mkdir -p "$path"; \
-        chmod 0777 "$path"; \
-        chown -R www-data:www-data "$path"; \
-    done
 
 # 定义环境变量
 ENV YII_MIGRATION_DO=1 \
@@ -41,3 +30,12 @@ ENV YII_MIGRATION_DO=1 \
     DB_DSN='mysql:host=172.17.0.1;dbname=yii2basic' \
     DB_USERNAME=test \
     DB_PASSWORD=123456
+
+# 修改目录权限
+RUN set -ex \
+    && for path in ${VOLUME_PATH} \
+    ; do \
+        mkdir -p "$path"; \
+        chmod 0777 "$path"; \
+        chown -R www-data:www-data "$path"; \
+    done

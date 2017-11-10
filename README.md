@@ -11,9 +11,19 @@
 ## build
 
 ```bash
+# build yii2-docker
 docker build -t yii2-docker .
-
 docker run -v /root/www/basic/:/app -p 80:80 yii2-docker
+
+# build basic
+docker build -t basic .
+docker run --rm --name basic -p 81:80 -v /root/test-dir/runtime:/app/runtime -v /root/test-dir/web:/app/web/assets basic
+docker stop basic
+
+# build advanced
+docker build -t advanced .
+docker run --rm --name advanced -p 81:80 -v /root/test-dir2/runtime:/app/backend/runtime -v /root/test-dir2/web:/app/backend/web/assets advanced
+docker stop advanced
 ```
 
 ## useful ENV

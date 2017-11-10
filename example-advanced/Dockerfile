@@ -28,7 +28,16 @@ RUN php init --env=Production --overwrite=n
 
 # 定义环境变量
 ENV YII_MIGRATION_DO=1 \
-    VOLUME_PATH=/backend/web/assets\ /backend/runtime\ /frontend/web/assets\ /frontend/runtime\ /console/runtime \
+    VOLUME_PATH=/app/backend/web/assets\ /app/backend/runtime\ /app/frontend/web/assets\ /app/frontend/runtime\ /app/console/runtime \
     DB_DSN='mysql:host=172.17.0.1;dbname=yii2advanced' \
     DB_USERNAME=test \
     DB_PASSWORD=123456
+
+# 修改目录权限
+RUN set -ex \
+    && for path in ${VOLUME_PATH} \
+    ; do \
+        mkdir -p "$path"; \
+        chmod 0777 "$path"; \
+        chown -R www-data:www-data "$path"; \
+    done
