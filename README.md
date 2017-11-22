@@ -43,8 +43,8 @@ docker stop advanced
     - /usr/local/etc/php：php 配置目录，可以放 php.ini
     - /etc/supervisor/conf.d： supervisor 脚本目录，可以放 supervisor 的配置
     
-    docker yaml：
-    ```bash
+    docker YAML：
+    ```yaml
     docker-yii2-env:
       image: daocloud.io/krissss/docker-yii2:latest
       privileged: false
