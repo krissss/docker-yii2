@@ -42,6 +42,8 @@ docker stop advanced
     - /etc/nginx/conf.d：nginx 配置目录，可以放虚拟域名等配置
     - /usr/local/etc/php：php 配置目录，可以放 php.ini
     - /etc/supervisor/conf.d： supervisor 脚本目录，可以放 supervisor 的配置
+    （注意：/etc/supervisor/conf.d/supervisord.conf 是存在的，其中配置了 `supervisord` `php-fpm` `nginx`，[详情见](https://github.com/krissss/docker-yii2/blob/master/image-files/etc/supervisor/conf.d/supervisord.conf)。
+    所以挂载该目录时注意不要把 `supervisord.conf` 给覆盖或者取消掉了，启动容器时会报错）
     
     docker YAML：
     ```yaml
@@ -55,7 +57,7 @@ docker stop advanced
       - /app:/app
       - /app/docker/nginx:/etc/nginx/conf.d:ro
       - /app/docker/php:/usr/local/etc/php:ro
-      - /app/docker/supervisor:/etc/supervisor/conf.d:ro
+      - /app/docker/supervisor/queue.conf:/etc/supervisor/conf.d/queue.conf:ro
     ```
     
 6. 访问应用
