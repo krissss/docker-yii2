@@ -36,7 +36,7 @@ docker stop advanced
 2. 安装 php-cli（用于执行 yii2 的命令等）
 3. 将 yii2 项目初始化，完成 composer 安装等
 4. 拉取镜像容器 `daocloud.io/krissss/docker-yii2`
-5. 启动容器，挂载 volume
+5. 启动容器，挂载 volume（将代码和 nginx 域名等挂载进去），修改 ENV（主要是`VOLUME_PATH` 可以解决容器和宿主机之间的权限问题）
     
     - /app：yii2 项目目录
     - /etc/nginx/conf.d：nginx 配置目录，可以放虚拟域名等配置
@@ -58,6 +58,8 @@ docker stop advanced
       - /app/docker/nginx:/etc/nginx/conf.d:ro
       - /app/docker/php:/usr/local/etc/php:ro
       - /app/docker/supervisor/queue.conf:/etc/supervisor/conf.d/queue.conf:ro
+      environment:
+      - VOLUME_PATH=/app
     ```
     
 6. 访问应用
