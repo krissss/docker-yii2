@@ -1,5 +1,7 @@
 # yii2 docker
 
+> [github 地址](https://github.com/krissss/docker-yii2)
+
 - git
 - gosu
 - php-fpm
