@@ -62,7 +62,7 @@ docker stop advanced
 
 ### 打包整个 yii2 项目使用
 
-例子参照 `example-basic` 和 `example-advanced`
+例子参照 [example-basic](https://github.com/krissss/docker-yii2/tree/master/example-basic) 和 [example-advanced](https://github.com/krissss/docker-yii2/tree/master/example-advanced)
 
 ## ENV
 
