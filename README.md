@@ -26,7 +26,43 @@ docker run --rm --name advanced -p 81:80 -v /root/test-dir2/runtime:/app/backend
 docker stop advanced
 ```
 
-## useful ENV
+## 使用方式
+
+### 作为 yii2 环境使用
+
+1. 在宿主机 clone 代码
+2. 安装 php-cli（用于执行 yii2 的命令等）
+3. 将 yii2 项目初始化，完成 composer 安装等
+4. 拉取镜像容器 `daocloud.io/krissss/docker-yii2`
+5. 启动容器，挂载 volume
+    
+    - /app：yii2 项目目录
+    - /etc/nginx/conf.d：nginx 配置目录，可以放虚拟域名等配置
+    - /usr/local/etc/php：php 配置目录，可以放 php.ini
+    - /etc/supervisor/conf.d： supervisor 脚本目录，可以放 supervisor 的配置
+    
+    docker yaml：
+    ```bash
+    docker-yii2-env:
+      image: daocloud.io/krissss/docker-yii2:latest
+      privileged: false
+      restart: always
+      ports:
+      - 8888:80
+      volumes:
+      - /app:/app
+      - /app/docker/nginx:/etc/nginx/conf.d:ro
+      - /app/docker/php:/usr/local/etc/php:ro
+      - /app/docker/supervisor:/etc/supervisor/conf.d:ro
+    ```
+    
+6. 访问应用
+
+### 打包整个 yii2 项目使用
+
+例子参照 `example-basic` 和 `example-advanced`
+
+## ENV
 
 - YII_MIGRATION_DO：是否在启动容器时执行 php yii migrate，值可选：
    - `0`：不执行，
