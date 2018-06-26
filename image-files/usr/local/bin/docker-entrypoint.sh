@@ -18,7 +18,7 @@ if [ ! -z "${VOLUME_PATH}" ]; then
         for path in ${VOLUME_PATH[@]} \
         ; do
             mkdir -p "$path"
-            chown -R www-data:www-data "$path"
+            #chown -R www-data:www-data "$path"
             #echo "chown volume path: " "$path"
         done
         mkdir /flag-volume-path
