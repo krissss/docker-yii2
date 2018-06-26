@@ -1,66 +1,24 @@
-FROM daocloud.io/library/php:7.0.12-fpm
+ARG PHP_VERSION
 
-# gosu 安装使用 github-production-release-asset-2e65be.s3.amazonaws.com 地址，国内被墙，所以使用 https 代理
-# 本地编译开启，线上编译一定注释掉
-#ENV http_proxy http://192.168.18.250:8118
-#ENV https_proxy http://192.168.18.250:8118
-
-# 切换 apt 镜像源(本地测试打开,daocloud 线上可以注释)
-#RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
-#    echo "deb http://mirrors.163.codockerm/debian/ jessie main non-free contrib" >/etc/apt/sources.list && \
-#    echo "deb http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >/etc/apt/sources.list && \
-#    echo "deb-src http://mirrors.163.com/debian/ jessie main non-free contrib" >/etc/apt/sources.list && \
-#    echo "deb-src http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >/etc/apt/sources.list
-
-# gosu 解决 volume 的权限问题，参考 redis|elasticsearch 的解决方案
-# https://github.com/docker-library/redis/blob/master/3.2/Dockerfile
-# https://github.com/docker-library/elasticsearch/blob/master/5/docker-entrypoint.sh
-# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
-# 由于 php-fpm 镜像下默认就是 www-data 用户
-#RUN groupadd -r www-data && useradd -r -g www-data www-data
-# grab gosu for easy step-down from root
-# https://github.com/tianon/gosu/releases
-ENV GOSU_VERSION 1.10
-# https://github.com/tianon/gosu/blob/master/INSTALL.md
-RUN set -ex; \
-	\
-	fetchDeps=' \
-		ca-certificates \
-		wget \
-	'; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends $fetchDeps; \
-	rm -rf /var/lib/apt/lists/*; \
-	\
-	dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
-	wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch"; \
-	wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc"; \
-	\
-	export GNUPGHOME="$(mktemp -d)"; \
-	gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
-	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
-	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
-	\
-	chmod +x /usr/local/bin/gosu; \
-	gosu nobody true;
-	# 最后一行，清理 ca-certificates 删除，因为后续还需要使用
+FROM php:${PHP_VERSION}-fpm
 
 # 安装依赖
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
-        libpng12-dev \
+        libpng-dev \
         git \
         supervisor \
         nginx \
         --no-install-recommends \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
-    && docker-php-ext-install \
+    && docker-php-ext-install -j$(nproc) \
+        iconv \
+        mcrypt \
         gd \
         pdo_mysql \
         mbstring \
-        mcrypt \
         opcache \
         zip \
         bcmath \
@@ -69,27 +27,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /usr/src/php* \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# 安装composer
-ENV COMPOSER_ALLOW_SUPERUSER=1 \
-    COMPOSER_HOME=/tmp \
-    COMPOSER_VERSION=1.6.5
-# https://github.com/composer/docker/blob/master/1.6/Dockerfile
-RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/b107d959a5924af895807021fcef4ffec5a76aa9/web/installer \
- && php -r " \
-    \$signature = '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061'; \
-    \$hash = hash('SHA384', file_get_contents('/tmp/installer.php')); \
-    if (!hash_equals(\$signature, \$hash)) { \
-        unlink('/tmp/installer.php'); \
-        echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
-        exit(1); \
-    }" \
- && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
- && composer --ansi --version --no-interaction \
- && rm -rf /tmp/* /tmp/.htaccess
+# 环境变量
+ENV PATH=/app:/app/vendor/bin:/root/.composer/vendor/bin:$PATH \
+    COMPOSER_ALLOW_SUPERUSER=1 \
+    COMPOSER_HOME=/tmp
 
-# 取消代理，配合前面 gosu 安装需要代理的
-#ENV http_proxy ''
-#ENV https_proxy ''
+RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" && \
+    php composer-setup.php && \
+    php -r "unlink('composer-setup.php');" && \
+    mv composer.phar /usr/local/bin/composer
 
 # 设置时区
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -98,6 +44,9 @@ RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 # 系统配置文件替换
 COPY image-files/ /
 RUN rm -rf /etc/nginx/sites-enabled/default /etc/nginx/sites-aviable/default
+# log 到 console
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 # 操作权限
 RUN chmod 700 \

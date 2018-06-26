@@ -14,16 +14,13 @@ fi
 
 if [ ! -z "${VOLUME_PATH}" ]; then
     if [ ! -d "/flag-volume-path" ]; then
-        # Change the ownership of user-mutable directories to www-data
         for path in ${VOLUME_PATH[@]} \
         ; do
             mkdir -p "$path"
-            #chown -R www-data:www-data "$path"
+            chown -R root:root "$path"
             #echo "chown volume path: " "$path"
         done
         mkdir /flag-volume-path
-        # 此处设置会产生操作权限问题（因此不启用此处时，gosu未使用到）
-        #set -- gosu www-data "$@"
     else
         echo "flag-volume-path exist"
     fi
