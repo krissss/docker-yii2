@@ -33,11 +33,14 @@ ENV YII_MIGRATION_DO=1 \
     DB_USERNAME=test \
     DB_PASSWORD=123456
 
+EXPOSE 80
+EXPOSE 81
+
 # 修改目录权限
 RUN set -ex \
     && for path in ${VOLUME_PATH} \
     ; do \
         mkdir -p "$path"; \
         chmod 0777 "$path"; \
-        chown -R www-data:www-data "$path"; \
+        chown -R root:root "$path"; \
     done

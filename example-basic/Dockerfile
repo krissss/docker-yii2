@@ -37,5 +37,5 @@ RUN set -ex \
     ; do \
         mkdir -p "$path"; \
         chmod 0777 "$path"; \
-        chown -R www-data:www-data "$path"; \
+        chown -R root:root "$path"; \
     done
