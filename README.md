@@ -1,11 +1,8 @@
 # yii2 docker
 
-## php 7.0 的分支
-
 > [github 地址](https://github.com/krissss/docker-yii2)
 
 - git
-- gosu
 - php-fpm
 - nginx
 - composer
@@ -16,7 +13,7 @@
 
 ```bash
 # build yii2-docker
-docker build -t yii2-docker .
+docker build -t yii2-docker --build-args PHP_VERSION=7.0 .
 docker run -v /root/www/basic/:/app -p 80:80 yii2-docker
 
 # build basic
@@ -81,11 +78,8 @@ docker stop advanced
    - `/app/web/assets`：单个路径
    - `/app/runtime\ /app/web/assets`：多个路径
 
-## 问题
+## 说明
 
-> 当前处于7.0.12 版本，为了和本地环境一致，另外由于部分第三方应用对 7.1 的还未兼容，问题比较多，所以降低当前 php 版本到 7.0
+1. 编译版本请使用：docker run 参数 `--build-args PHP_VERSION=7.0`
 
-已知暂未支持的项目：
-
-- [PHPOffice/PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) 还未发布正式版本
-- [kartik-v/yii2-export](https://github.com/kartik-v/yii2-export) 由于使用的是[PHPOffice/PHPExcel](https://github.com/PHPOffice/PHPExcel)，所以不支持 7.1
+2. 7.0 和 7.1 目录为 hub.docker.com 自动编译使用，里面的代码和外部保持一致，仅修改了 php 版本
