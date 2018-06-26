@@ -1,6 +1,6 @@
 # yii2 docker
 
-## php 7.1 的分支
+## php 7.0 的分支
 
 > [github 地址](https://github.com/krissss/docker-yii2)
 

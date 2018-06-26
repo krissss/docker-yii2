@@ -1,4 +1,4 @@
-FROM daocloud.io/library/php:7.1.11-fpm
+FROM daocloud.io/library/php:7.0.12-fpm
 
 # gosu 安装使用 github-production-release-asset-2e65be.s3.amazonaws.com 地址，国内被墙，所以使用 https 代理
 # 本地编译开启，线上编译一定注释掉
