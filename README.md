@@ -58,7 +58,7 @@ docker stop advanced
       volumes:
       - /app:/app
       - /app/docker/nginx:/etc/nginx/conf.d:ro
-      - /app/docker/php:/usr/local/etc/php:ro
+      - /app/docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
       - /app/docker/supervisor/queue.conf:/etc/supervisor/conf.d/queue.conf:ro
       environment:
       - VOLUME_PATH=/app
