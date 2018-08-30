@@ -45,9 +45,6 @@ RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 # 系统配置文件替换
 COPY image-files/ /
 RUN rm -rf /etc/nginx/sites-enabled/default /etc/nginx/sites-aviable/default
-# log 到 console
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
 
 # 操作权限
 RUN chmod 700 \
