@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
         opcache \
         zip \
         bcmath \
+        pcntl \
     && apt-get clean \
     && apt-get autoclean \
     && rm -rf /usr/src/php* \
