@@ -17,7 +17,9 @@ RUN apt-get update && apt-get install -y \
         iconv \
         mcrypt \
         gd \
+        pdo \
         pdo_mysql \
+        mysqli \
         mbstring \
         opcache \
         zip \
