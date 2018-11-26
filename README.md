@@ -13,6 +13,7 @@
 
 ```bash
 # build yii2-docker
+cd base
 docker build -t yii2-docker --build-args PHP_VERSION=7.0 .
 docker run -v /root/www/basic/:/app -p 80:80 yii2-docker
 
@@ -65,7 +66,7 @@ docker stop advanced
 
 ### 打包整个 yii2 项目使用
 
-例子参照 [example-basic](https://github.com/krissss/docker-yii2/tree/master/example-basic) 和 [example-advanced](https://github.com/krissss/docker-yii2/tree/master/example-advanced)
+例子参照 [example-basic](https://github.com/krissss/docker-yii2/tree/master/example/basic) 和 [example-advanced](https://github.com/krissss/docker-yii2/tree/master/example/advanced)
 
 ## ENV
 
@@ -82,4 +83,4 @@ docker stop advanced
 
 1. 编译版本请使用：docker run 参数 `--build-args PHP_VERSION=7.0`
 
-2. 7.0 和 7.1 目录为 hub.docker.com 自动编译使用，里面的代码和外部保持一致，仅修改了 php 版本
+2. 7.0 7.1 7.2 下的内容 update.php 维护，请勿直接修改

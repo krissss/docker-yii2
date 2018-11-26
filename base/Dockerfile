@@ -1,5 +1,7 @@
+##
+# ${COMMENT}
+##
 ARG PHP_VERSION
-
 FROM php:${PHP_VERSION}-fpm
 
 # 安装依赖

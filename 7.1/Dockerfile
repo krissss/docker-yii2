@@ -1,4 +1,6 @@
-#ARG PHP_VERSION
+##
+# This File Is Updated From base/Dockerfile By `update.php`, Don't Modify!
+##
 
 FROM php:7.1-fpm
 

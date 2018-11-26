@@ -2,7 +2,7 @@
 # This File Is Updated From base/Dockerfile By `update.php`, Don't Modify!
 ##
 
-FROM php:7.0-fpm
+FROM php:7.2-fpm
 
 # 安装依赖
 RUN apt-get update && apt-get install -y \
