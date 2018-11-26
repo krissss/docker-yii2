@@ -1,12 +1,11 @@
 <?php
 
 $base = 'base';
-$versions = ['7.0', '7.1', '7.2'];
 $commonDockerFileReplace = [
     '${COMMENT}' => "This File Is Updated From {$base}/Dockerfile By `update.php`, Don't Modify!",
     '${PHP_VERSION}' => '{$VERSION}',
     'ARG PHP_VERSION' => '',
-    '${MCRYPT}' => '',
+    '${MCRYPT}' => '', // php 7.2 已经完全移除 mcrypt 扩展到 pecl 中。@link http://php.net/manual/zh/migration71.deprecated.php
 ];
 $replaceFileData = [
     '7.0' => [
