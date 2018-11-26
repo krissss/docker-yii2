@@ -62,7 +62,7 @@ WORKDIR /app
 # 额外的环境变量
 ENV YII_MIGRATION_DO=0 \
     # 多个路径写法：/app/web/assets\ /app/runtime
-    VOLUME_PATH=''
+    VOLUME_PATH='/app'
 
 EXPOSE 80
 
