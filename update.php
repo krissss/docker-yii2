@@ -2,18 +2,32 @@
 
 $base = 'base';
 $versions = ['7.0', '7.1', '7.2'];
-$replaceFiles = [
-    '/Dockerfile' => [
-        '${COMMENT}' => "This File Is Updated From {$base}/Dockerfile By `update.php`, Don't Modify!",
-        '${PHP_VERSION}' => '{$VERSION}',
-        'ARG PHP_VERSION' => '',
+$commonDockerFileReplace = [
+    '${COMMENT}' => "This File Is Updated From {$base}/Dockerfile By `update.php`, Don't Modify!",
+    '${PHP_VERSION}' => '{$VERSION}',
+    'ARG PHP_VERSION' => '',
+    '${MCRYPT}' => '',
+];
+$replaceFileData = [
+    '7.0' => [
+        '/Dockerfile' => array_merge($commonDockerFileReplace, [
+            '${MCRYPT}' => 'mcrypt \\',
+        ]),
+    ],
+    '7.1' => [
+        '/Dockerfile' => array_merge($commonDockerFileReplace, [
+            '${MCRYPT}' => 'mcrypt \\',
+        ]),
+    ],
+    '7.2' => [
+        '/Dockerfile' => $commonDockerFileReplace,
     ],
 ];
 
-foreach ($versions as $version) {
+foreach ($replaceFileData as $version => $replaceFileItem) {
     rmdirs($version);
     copydir($base, $version);
-    foreach ($replaceFiles as $filename => $searchAndReplace) {
+    foreach ($replaceFileItem as $filename => $searchAndReplace) {
         $searchAndReplace = array_map(function ($item) use ($version) {
             return $item == '{$VERSION}' ? $version : $item;
         }, $searchAndReplace);
