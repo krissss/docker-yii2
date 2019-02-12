@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
         net-tools \
         iputils-ping \
         --no-install-recommends \
+
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) \
         iconv \
@@ -30,6 +31,11 @@ RUN apt-get update && apt-get install -y \
         bcmath \
         pcntl \
         ${MCRYPT}
+
+    && pecl install sqlsrv-${SQLSRV_VERSION} \
+    && pecl install pdo_sqlsrv-${SQLSRV_VERSION} \
+    && docker-php-ext-enable sqlsrv pdo_sqlsrv \
+
     && apt-get clean \
     && apt-get autoclean \
     && rm -rf /usr/src/php* \
