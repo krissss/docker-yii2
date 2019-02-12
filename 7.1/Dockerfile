@@ -16,9 +16,11 @@ RUN apt-get update && apt-get install -y \
         nginx \
         net-tools \
         iputils-ping \
-        --no-install-recommends \
+        curl \
+        apt-transport-https \
+        --no-install-recommends
 
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) \
         iconv \
         gd \
@@ -29,14 +31,20 @@ RUN apt-get update && apt-get install -y \
         opcache \
         zip \
         bcmath \
-        pcntl \
         mcrypt \
+        pcntl
 
+# 安装 sqlsrv
+# @link https://docs.microsoft.com/zh-cn/sql/connect/php/installation-tutorial-linux-mac?view=sql-server-2017#installing-the-drivers-on-debian-8-and-9
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+    && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
+    && apt-get update
+    && ACCEPT_EULA=Y apt-get install msodbcsql17
     && pecl install sqlsrv-5.3.0 \
     && pecl install pdo_sqlsrv-5.3.0 \
-    && docker-php-ext-enable sqlsrv pdo_sqlsrv \
+    && docker-php-ext-enable sqlsrv pdo_sqlsrv
 
-    && apt-get clean \
+RUN apt-get clean \
     && apt-get autoclean \
     && rm -rf /usr/src/php* \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
