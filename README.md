@@ -14,7 +14,7 @@
 ```bash
 # build yii2-docker
 cd base
-docker build -t yii2-docker --build-args PHP_VERSION=7.0 .
+docker build -t yii2-docker --build-arg PHP_VERSION=7.0 .
 docker run -v /root/www/basic/:/app -p 80:80 yii2-docker
 
 # build basic
@@ -81,6 +81,6 @@ docker stop advanced
 
 ## 说明
 
-1. 编译版本请使用：docker run 参数 `--build-args PHP_VERSION=7.0`
+1. 编译版本请使用：docker run 参数 `--build-arg PHP_VERSION=7.0`
 
 2. 7.0 7.1 7.2 下的内容 update.php 维护，请勿直接修改
