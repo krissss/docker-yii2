@@ -41,7 +41,6 @@ RUN apt-get install -y \
     net-tools \
     iputils-ping \
     nodejs \
-    # nodejs 本机编译需要的
     build-essential \
     yarn
 
@@ -56,8 +55,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         mbstring \
         opcache \
         zip \
-        bcmath \
-        ${MCRYPT}
+        bcmath ${MCRYPT}
         pcntl
 
 # 安装 sqlsrv
