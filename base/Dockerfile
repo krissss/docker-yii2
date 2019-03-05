@@ -15,6 +15,14 @@ RUN apt-get update && apt-get install -y apt-transport-https gnupg2 unixodbc-dev
 RUN curl -s https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
+# 安装 nodejs
+# @link https://github.com/nodesource/distributions/blob/master/README.md#deb
+RUN curl -sL https://deb.nodesource.com/setup_${NODE_JS_VERSION}.x | bash -
+# 安装 yarn
+# @link https://yarnpkg.com/en/docs/install#debian-stable
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
 # 安装开发环境依赖
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
@@ -31,7 +39,13 @@ RUN apt-get install -y \
     nginx \
     unzip \
     net-tools \
-    iputils-ping
+    iputils-ping \
+    nodejs \
+    # nodejs 本机编译需要的
+    build-essential \
+    yarn
+
+RUN npm run
 
 # php 核心扩展
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
