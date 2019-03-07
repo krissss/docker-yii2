@@ -10,7 +10,7 @@ FROM php:7.2-fpm
 
 # 安装 sqlsrv 必要的环境
 # 必须的依赖
-RUN apt-get update && apt-get install -y apt-transport-https gnupg2 unixodbc-dev
+RUN apt-get update && apt-get install -y apt-transport-https gnupg2 unixodbc-dev --no-install-recommends
 # @link https://docs.microsoft.com/zh-cn/sql/connect/php/installation-tutorial-linux-mac?view=sql-server-2017#installing-the-drivers-on-debian-8-and-9
 RUN curl -s https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
 RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
@@ -29,20 +29,25 @@ RUN apt-get update && apt-get install -y \
     libjpeg62-turbo-dev \
     libmcrypt-dev \
     libpng-dev \
+    apt-utils \
     apt-transport-https \
     --no-install-recommends
 
 # 必要环境
 RUN apt-get install -y \
     git \
+    openssh-client \
+    vim \
     supervisor \
     nginx \
     unzip \
     net-tools \
     iputils-ping \
+    telnet \
     nodejs \
     build-essential \
-    yarn
+    yarn \
+    --no-install-recommends
 
 # php 核心扩展
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ \
@@ -73,7 +78,7 @@ RUN apt-get clean \
 # 环境变量
 ENV PATH=/app:/app/vendor/bin:/root/.composer/vendor/bin:$PATH \
     COMPOSER_ALLOW_SUPERUSER=1 \
-    COMPOSER_HOME=/tmp
+    COMPOSER_HOME=/composer
 
 RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" && \
     php composer-setup.php && \
